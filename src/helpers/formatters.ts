@@ -11,7 +11,7 @@ export async function adaptDataBTCList(transfers) {
   const currentBtcPrice = await getMercadoBitcoin();
 
   for (const transfer of transfers) {
-    const purchaseDate = new Date(transfer.createdat);
+    const purchaseDate = formatDate(transfer.createdat);
     const investedAmount = transfer.amount;
     const btcPriceAtPurchase = transfer.value_btc;
     const priceVariationPercent =

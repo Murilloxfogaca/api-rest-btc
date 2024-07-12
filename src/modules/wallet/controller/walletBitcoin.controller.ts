@@ -30,23 +30,23 @@ export class WalletBitcoinController {
     const userId = req[" currentUser"].id;
     const walletRepository = AppDataSource.getRepository(WalletBitcoin);
     const depoits = await walletRepository
-      .createQueryBuilder("wallet")
-      .select("SUM(wallet.amount)", "totalQuantity")
-      .where("wallet.user.id = :userId", { userId })
-      .andWhere("wallet.status = 'purchase'")
-      .andWhere("DATE(wallet.createdat) = CURRENT_DATE")
-      .groupBy("wallet.createdat")
-      .orderBy("wallet.createdat", "ASC")
+      .createQueryBuilder("walletbitcoin")
+      .select("SUM(walletbitcoin.amount)", "totalQuantity")
+      .where("walletbitcoin.user.id = :userId", { userId })
+      .andWhere("walletbitcoin.status = 'purchase'")
+      .andWhere("DATE(walletbitcoin.createdat) = CURRENT_DATE")
+      .groupBy("walletbitcoin.createdat")
+      .orderBy("walletbitcoin.createdat", "ASC")
       .getRawOne();
 
     const sold = await walletRepository
       .createQueryBuilder("wallet")
-      .select("SUM(wallet.amount)", "totalQuantity")
-      .where("wallet.user.id = :userId", { userId })
-      .andWhere("wallet.status = 'sold'")
-      .andWhere("DATE(wallet.createdat) = CURRENT_DATE")
-      .groupBy("wallet.createdat")
-      .orderBy("wallet.createdat", "ASC")
+      .select("SUM(walletbitcoin.amount)", "totalQuantity")
+      .where("walletbitcoin.user.id = :userId", { userId })
+      .andWhere("walletbitcoin.status = 'sold'")
+      .andWhere("DATE(walletbitcoin.createdat) = CURRENT_DATE")
+      .groupBy("walletbitcoin.createdat")
+      .orderBy("walletbitcoin.createdat", "ASC")
       .getRawOne();
 
     return res.status(200).json({
@@ -116,13 +116,13 @@ export class WalletBitcoinController {
 
     const walletRepository = AppDataSource.getRepository(WalletBitcoin);
 
-    const wallets = await walletRepository.find({
-      where: {
-        user: { id: req[" currentUser"].id },
-        createdat: Between(startDate, endDate),
-      },
-      relations: ["user"],
-    });
+    const wallets = await walletRepository
+      .createQueryBuilder("walletbitcoin")
+      .leftJoinAndSelect("walletbitcoin.user", "user")
+      .where("user.id = :userId", { userId: req["currentUser"].id })
+      .andWhere("createdAt >= :startDate", startDate)
+      .andWhere("createdAt < :endDate", endDate)
+      .getMany();
 
     const totalQuantity = await getBalanceBTCForId(req[" currentUser"].id);
 
@@ -175,4 +175,10 @@ export class WalletBitcoinController {
       message: `Bitcoin Successfully Sold in ${amount} Value`,
     });
   }
+}
+function BetweenDates(
+  startDate: Date,
+  endDate: Date
+): Date | import("typeorm").FindOperator<Date> {
+  throw new Error("Function not implemented.");
 }

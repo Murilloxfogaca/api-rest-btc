@@ -16,7 +16,7 @@ export interface WalletTransfer {
 }
 
 export interface InvestmentInfo {
-  purchaseDate: Date;
+  purchaseDate: String;
   investedAmount: number;
   btcPriceAtPurchase: number;
   priceVariationPercent: number;

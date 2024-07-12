@@ -18,7 +18,7 @@ app.use(express.json());
 const { PORT = 3000 } = process.env;
 app.use(errorHandler);
 app.use("/", userRouter);
-app.use("/cron", bitcoinRouter);
+app.use("/history-cron", bitcoinRouter);
 app.use("/wallet", walletRouter);
 schedulePriceUpdateJob();
 scheduleCleanupJob();
