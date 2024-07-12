@@ -1,0 +1,13 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "753869",
+  "database": "eduzz",
+  "synchronize": false,
+  "logging": false,
+  "entities": ["src/entity/*.entity.{ts,js}"],
+  "migrations": ["src/migration/*.ts"],
+  "subscribers": []
+}
