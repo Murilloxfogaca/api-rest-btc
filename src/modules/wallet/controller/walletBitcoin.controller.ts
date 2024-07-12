@@ -34,24 +34,26 @@ export class WalletBitcoinController {
       .select("SUM(walletbitcoin.amount)", "totalQuantity")
       .where("walletbitcoin.user.id = :userId", { userId })
       .andWhere("walletbitcoin.status = 'purchase'")
-      .andWhere("DATE(walletbitcoin.createdat) = CURRENT_DATE")
-      .groupBy("walletbitcoin.createdat")
-      .orderBy("walletbitcoin.createdat", "ASC")
+      .andWhere(
+        "walletbitcoin.createdat >= CURRENT_DATE AND walletbitcoin.createdat < CURRENT_DATE + INTERVAL '2 days'"
+      )
       .getRawOne();
 
     const sold = await walletRepository
-      .createQueryBuilder("wallet")
+      .createQueryBuilder("walletbitcoin")
       .select("SUM(walletbitcoin.amount)", "totalQuantity")
       .where("walletbitcoin.user.id = :userId", { userId })
       .andWhere("walletbitcoin.status = 'sold'")
-      .andWhere("DATE(walletbitcoin.createdat) = CURRENT_DATE")
-      .groupBy("walletbitcoin.createdat")
-      .orderBy("walletbitcoin.createdat", "ASC")
+      .andWhere(
+        "walletbitcoin.createdat >= CURRENT_DATE AND walletbitcoin.createdat < CURRENT_DATE + INTERVAL '2 days'"
+      )
       .getRawOne();
 
+    console.log({ depoits: depoits, sold: sold });
+
     return res.status(200).json({
-      purchased: isNaN(depoits) ? 0 : parseFloat(depoits.totalQuantity),
-      sold: isNaN(sold) ? 0 : parseFloat(sold.totalQuantity),
+      purchased: depoits.totalQuantity,
+      sold: sold.totalQuantity,
     });
   }
 
@@ -106,7 +108,7 @@ export class WalletBitcoinController {
 
   static async getListTransferBTC(req: Request, res: Response) {
     const { di, df } = req.query;
-
+    const userid = req[" currentUser"].id;
     const today = new Date();
     const endDate = typeof df === "string" ? new Date(df) : today;
     const startDate =
@@ -118,10 +120,11 @@ export class WalletBitcoinController {
 
     const wallets = await walletRepository
       .createQueryBuilder("walletbitcoin")
-      .leftJoinAndSelect("walletbitcoin.user", "user")
-      .where("user.id = :userId", { userId: req["currentUser"].id })
-      .andWhere("createdAt >= :startDate", startDate)
-      .andWhere("createdAt < :endDate", endDate)
+      .innerJoinAndSelect("walletbitcoin.user", "user")
+      .where("walletbitcoin.user.id = :userId", { userId: userid })
+      .andWhere(
+        `walletbitcoin.createdat BETWEEN '${startDate}' AND '${endDate}'`
+      )
       .getMany();
 
     const totalQuantity = await getBalanceBTCForId(req[" currentUser"].id);

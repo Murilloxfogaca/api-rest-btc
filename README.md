@@ -3,6 +3,8 @@ Instruções para Execução do Projeto eduzz_dev (Linux)
 Este documento fornece instruções detalhadas para configurar e executar o projeto eduzz_dev em um ambiente Linux.
 Requisitos
 
+Link do postman: https://murilloxfogaca.github.io/postman/eduzz-dev-backend-btc.json
+
 Certifique-se de ter o seguinte instalado em seu sistema:
 
     Node.js (versão recomendada: 16.x)

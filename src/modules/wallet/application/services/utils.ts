@@ -4,6 +4,8 @@ import { WalletBRL } from "../../../../config/domain/WalletBRL.entity";
 import { AppDataSource } from "../../../../data-source";
 import { formatToNumeric10_8 } from "../../../../helpers/utils";
 import { getMercadoBitcoin } from "../../../cron/application/mercadoBitcoin";
+import { Between } from "typeorm";
+import { format } from "date-fns";
 
 export async function validationIsSameBalanceSell($userID: string) {
   const walletRepository = AppDataSource.getRepository(WalletBitcoin);
@@ -108,3 +110,12 @@ export async function getResidualBTC($userID: string, $amount: number, user) {
 
   return { soldTransfers, discount: count - $amount };
 }
+
+export const BetweenDates = (from: Date | string, to: Date | string) =>
+  Between(
+    format(
+      typeof from === "string" ? new Date(from) : from,
+      "YYYY-MM-DD HH:MM:SS"
+    ),
+    format(typeof to === "string" ? new Date(to) : to, "YYYY-MM-DD HH:MM:SS")
+  );
