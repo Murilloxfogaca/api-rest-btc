@@ -61,25 +61,12 @@ json
       "database": "nome_do_banco_de_dados",
       "synchronize": true,
       "logging": false,
-      "entities": ["src/**/*.entity.ts"],
-      "migrations": ["src/migrations/*.ts"],
-      "cli": {
-        "entitiesDir": "src/entities",
-        "migrationsDir": "src/migrations"
-      }
+      "entities": ["src/config/domain/**/*{.js,.ts}"],
+      "migrations": ["src/config/migration/**/*{.js,.ts}"],
+      subscribers: ["src/config/subscriber/**/*{.js,.ts}"],,
     }
 
 Execução
-
-    Compilação e Execução em Modo Desenvolvimento
-
-    Para iniciar o projeto em modo de desenvolvimento, execute:
-
-    bash
-
-npm run start:dev
-
-Este comando compila automaticamente o TypeScript e inicia o servidor usando nodemon para reiniciar automaticamente quando os arquivos são modificados.
 
 Compilar para Produção
 
@@ -101,5 +88,4 @@ bash
 
 Comandos Úteis
 
-    npm run watch: Executa o compilador TypeScript em modo watch.
     npm run migration: Executa as migrações do TypeORM.
