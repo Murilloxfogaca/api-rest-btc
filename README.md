@@ -1,56 +1,53 @@
-Instruções para Execução do Projeto eduzz_dev (Linux)
+Instructions for Running the eduzz_dev Project (Linux)
 
-Este documento fornece instruções detalhadas para configurar e executar o projeto eduzz_dev em um ambiente Linux.
-Requisitos
+This document provides detailed instructions for setting up and running the eduzz_dev project in a Linux environment.
+Requirements
 
-Link do postman: https://murilloxfogaca.github.io/postman/eduzz-dev-backend-btc.json
+Postman link: https://murilloxfogaca.github.io/postman/eduzz-dev-backend-btc.json
 
-Certifique-se de ter o seguinte instalado em seu sistema:
+Make sure you have the following installed on your system:
 
-    Node.js (versão recomendada: 16.x)
-    npm (gerenciador de pacotes do Node.js)
-    TypeScript (versão 4.5.2)
-    Banco de dados PostgreSQL (opcional para o uso com TypeORM)
+    Node.js (recommended version: 16.x)
+    npm (Node.js package manager)
+    TypeScript (version 4.5.2)
+    PostgreSQL database (optional for use with TypeORM)
 
-Instalação
+Installation
+Cloning the Repository
 
-    Clonando o Repositório
+Clone this repository to your local environment:
 
-    Clone este repositório para o seu ambiente local:
-
-    bash
+bash
 
 git clone <url_do_seu_repositorio>
 cd eduzz_dev
 
-Instalando Dependências
+Installing Dependencies
 
-Instale as dependências do projeto usando npm:
+Install the project dependencies using npm:
 
 bash
 
-    npm install
+npm install
 
-Configuração
+Configuration
+Environment Variables
 
-    Variáveis de Ambiente
+Create a .env file at the root of the project and set the necessary environment variables, such as database connections, JWT keys, etc. A basic example might be:
 
-    Crie um arquivo .env na raiz do projeto e configure as variáveis de ambiente necessárias, como as conexões com o banco de dados, chaves JWT, etc. Um exemplo básico pode ser:
 
-    makefile
+    PORT=3000
+    DB_HOST=localhost
+    DB_USER=your_user
+    DB_PASS=your_password
+    DB_NAME=your_database_name
+    JWT_SECRET=your_jwt_secret_key
 
-PORT=3000
-DB_HOST=localhost
-DB_USER=seu_usuario
-DB_PASS=sua_senha
-DB_NAME=nome_do_banco_de_dados
-JWT_SECRET=sua_chave_secreta_para_jwt
+TypeORM Configuration
 
-Configuração do TypeORM
+Configure TypeORM by editing the ormconfig.json file at the root of the project, if necessary, to match your database settings.
 
-Configure o TypeORM editando o arquivo ormconfig.json na raiz do projeto, se necessário, para corresponder às suas configurações de banco de dados.
-
-Exemplo básico de ormconfig.json:
+Basic example of ormconfig.json:
 
 json
 
@@ -58,36 +55,35 @@ json
       "type": "postgres",
       "host": "localhost",
       "port": 5432,
-      "username": "seu_usuario",
-      "password": "sua_senha",
-      "database": "nome_do_banco_de_dados",
+      "username": "your_user",
+      "password": "your_password",
+      "database": "your_database_name",
       "synchronize": true,
       "logging": false,
       "entities": ["src/config/domain/**/*{.js,.ts}"],
       "migrations": ["src/config/migration/**/*{.js,.ts}"],
-      subscribers: ["src/config/subscriber/**/*{.js,.ts}"],,
+      "subscribers": ["src/config/subscriber/**/*{.js,.ts}"]
     }
 
-Execução
+Execution
+Compile for Production
 
-Compilar para Produção
-
-Para compilar o projeto TypeScript para JavaScript, execute:
+To compile the TypeScript project to JavaScript, run:
 
 bash
 
+npm run migration
 npm run build
 
-Isso cria uma pasta build com os arquivos compilados prontos para produção.
+This creates a build folder with the compiled files ready for production.
+Run in Production Mode
 
-Executar em Modo de Produção
-
-Para iniciar o projeto em modo de produção, após a compilação, execute:
+To start the project in production mode after compilation, run:
 
 bash
 
-    npm start
+npm start
 
-Comandos Úteis
+Useful Commands
 
-    npm run migration: Executa as migrações do TypeORM.
+    npm run migration: Runs TypeORM migrations.
